@@ -308,10 +308,23 @@ Example:
      * to beautify whatever content is
      */
     _initializeBeautify: function() {
-      this.async(function() {
+      this._beautifyRetries = this._beautifyRetries || 0;
+      // If beautify has been parsed and is in the window, attach to `this`
+      // and update the editor content (if any) to ensure it's beautiful
+      if (window.js_beautify) {
         this._beautify = window.js_beautify;
         this._updateEditorContent(this.content);
-      }, 50);
+        return;
+      }
+      // Otherwise, in 50ms try again. This will loop and retry until it
+      // succeeds or hits the maximum number of retries.
+      else if (this._beautifyRetries < 10) {
+        this._beautifyRetries++;
+        this.async(this._initializeBeautify, 50);
+      }
+      else {
+        console.log('[px-demo-snippet] Failed to load beautify. Hit maximum number of retries. ');
+      }
     },
 
     /**
