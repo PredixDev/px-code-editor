@@ -1,3 +1,7 @@
+v1.1.0
+==================
+* Add HTML beautify option
+
 v1.0.2
 ==================
 * Change default `Save` and `Cancel` button text

@@ -64,8 +64,13 @@ Example:
       </template>
     </section>
 
-    <template is="dom-if" if="{{_shouldLoadExtension(enableBeautify)}}">
+    <template is="dom-if" if="{{_shouldBeautify('javascript', enableBeautify, language)}}">
+      <p>js</p>
       <link rel="import" href="js-beautify.html" on-load="_initializeBeautify">
+    </template>
+    <template is="dom-if" if="{{_shouldBeautify('html', enableBeautify, language)}}">
+      <p>html</p>
+      <link rel="import" href="html-beautify.html" on-load="_initializeBeautify">
     </template>
   </template>
 </dom-module>
@@ -311,8 +316,11 @@ Example:
       this._beautifyRetries = this._beautifyRetries || 0;
       // If beautify has been parsed and is in the window, attach to `this`
       // and update the editor content (if any) to ensure it's beautiful
-      if (window.js_beautify) {
-        this._beautify = window.js_beautify;
+      var entrypoint;
+      if (this.language === 'javascript') entrypoint = 'js_beautify';
+      if (this.language === 'html') entrypoint = 'html_beautify';
+      if (window[entrypoint]) {
+        this._beautify = window[entrypoint];
         this._updateEditorContent(this.content);
         return;
       }
@@ -335,6 +343,17 @@ Example:
      */
     _shouldLoadExtension: function(extWanted) {
       return extWanted;
+    },
+
+    /**
+     * If `enableBeautify` is set and the requested `language` matches the
+     * caller, returns `true`.
+     *
+     * @param {String} language - The language `this.language` should match
+     * @return {Boolean}
+     */
+    _shouldBeautify: function(language) {
+      return this.enableBeautify && this.language === language;
     },
 
     /**
