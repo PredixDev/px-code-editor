@@ -1,3 +1,7 @@
+v1.1.1
+==================
+* Remove errant text from template
+
 v1.1.0
 ==================
 * Add HTML beautify option

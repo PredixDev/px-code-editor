@@ -65,11 +65,9 @@ Example:
     </section>
 
     <template is="dom-if" if="{{_shouldBeautify('javascript', enableBeautify, language)}}">
-      <p>js</p>
       <link rel="import" href="js-beautify.html" on-load="_initializeBeautify">
     </template>
     <template is="dom-if" if="{{_shouldBeautify('html', enableBeautify, language)}}">
-      <p>html</p>
       <link rel="import" href="html-beautify.html" on-load="_initializeBeautify">
     </template>
   </template>
