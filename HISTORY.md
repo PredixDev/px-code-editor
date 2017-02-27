@@ -1,3 +1,7 @@
+v1.1.3
+==================
+* Add a `flex-to-size` option for resizing to fit parent
+
 v1.1.2
 ==================
 * Add max number of retries for checking parent container size to avoid an infinite loop

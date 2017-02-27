@@ -50,6 +50,16 @@ Example:
 <dom-module id="px-code-editor">
   <template>
     <style include="px-code-editor-styles"></style>
+    <style>
+      /* Use flex to resize */
+      :host([flex-to-size]) {
+        display: flex;
+        flex: 1;
+      }
+      :host([flex-to-size]) #code {
+        flex: 1;
+      }
+    </style>
 
     <section class="code-editor flex flex--col" id="code">
       <div class="code-editor__wrapper flex__item" id="wrapper">
@@ -184,6 +194,25 @@ Example:
         type: String,
         value: 'Cancel'
       },
+
+      /**
+       * Uses flexbox to set the size of the code editor. Set the parent container
+       * to use `display: flex;` in your CSS and the map will automatically
+       * fill the container's available height and width.
+       *
+       * If `true`, the map will no longer attempt to resize itself automatically
+       * when its parent is resized using `IronResizableBehavior`. Instead,
+       * it will rely on the CSS rules to take effect.
+       *
+       * @property flexToSize
+       * @type {Boolean}
+       * @default false
+       */
+      flexToSize: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
     },
 
     listeners: {
@@ -207,7 +236,9 @@ Example:
      * the available space.
      */
     _handleResizeEvent(evt) {
-      this._fitToParentContainer(20);
+      if (!this.flexToSize) {
+        this._fitToParentContainer(20);
+      }
     },
 
     /**

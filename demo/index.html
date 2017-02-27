@@ -36,8 +36,8 @@
       <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component class="flex flex--col">
-        <div style="width:600px;height:400px;">
+      <px-demo-component class="flex__item flex flex--col">
+        <div class="flex__item flex">
           <px-code-editor
               content="{{props.content.value}}"
               language="{{props.language.value}}"
@@ -46,7 +46,8 @@
               enable-save-to-update="{{props.enableSaveToUpdate.value}}"
               reset-button-label="{{props.resetButtonLabel.value}}"
               save-button-label="{{props.saveButtonLabel.value}}"
-              tab-size="{{props.tabSize.value}}">
+              tab-size="{{props.tabSize.value}}"
+              flex-to-size="{{props.flexToSize.value}}">
           </px-code-editor>
         </div>
       </px-demo-component>
@@ -259,6 +260,12 @@
         type: String,
         defaultValue: '2',
         inputType: 'text'
+      },
+
+      flexToSize: {
+        type: Boolean,
+        defaultValue: true,
+        inputType: 'toggle'
       }
     }
   });
