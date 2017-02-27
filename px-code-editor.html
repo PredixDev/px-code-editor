@@ -187,7 +187,7 @@ Example:
     },
 
     listeners: {
-      'iron-resize': '_parentResized'
+      'iron-resize': '_handleResizeEvent'
     },
 
     attached: function() {
@@ -206,15 +206,31 @@ Example:
      * Handle 'iron-resize' event to ensure the editor size is synced with
      * the available space.
      */
-    _parentResized: function(evt) {
+    _handleResizeEvent(evt) {
+      this._fitToParentContainer(20);
+    },
+
+    /**
+     * Attempts to resize the code editor to fill the parent container. Can be
+     * called with a number of desired `maxRetries` before stopping to avoid an
+     * infinite loop that happens when trying to check the size of parents
+     * that are collapsed/invisible.
+     *
+     * Setting the `retry` param will be handled internally by the function.
+     */
+    _fitToParentContainer: function(maxRetries, retry) {
+      maxRetries = maxRetries || 20;
+      retry = retry || 0;
+
       var x = this.x = this.parentElement.clientWidth;
       var y = this.y = this.parentElement.clientHeight;
 
-      if (!x || !y) {
+      if ((!x || !y) && retry <= maxRetries) {
         // If no height, toss this back and wait for the next animation frame
         // to try again.
         window.requestAnimationFrame(function(){
-          this.async(this.notifyResize, 1);
+          var boundFitFn = this._fitToParentContainer.bind(this, maxRetries, retry + 1);
+          this.async(boundFitFn, 1);
         }.bind(this));
         return;
       }

@@ -1,3 +1,7 @@
+v1.1.2
+==================
+* Add max number of retries for checking parent container size to avoid an infinite loop
+
 v1.1.1
 ==================
 * Remove errant text from template
