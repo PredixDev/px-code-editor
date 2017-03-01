@@ -75,15 +75,19 @@ Example:
     </section>
 
     <template is="dom-if" if="{{_shouldBeautify('javascript', enableBeautify, language)}}">
-      <link rel="import" href="js-beautify.html" on-load="_initializeBeautify">
+      <!-- <link rel="import" href="js-beautify.html" on-load="_initializeBeautify"> -->
+      <script src="load-js-beautify.js"></script>
     </template>
     <template is="dom-if" if="{{_shouldBeautify('html', enableBeautify, language)}}">
-      <link rel="import" href="html-beautify.html" on-load="_initializeBeautify">
+      <!-- <link rel="import" href="html-beautify.html" on-load="_initializeBeautify"> -->
+      <script src="load-html-beautify.js"></script>
     </template>
   </template>
 </dom-module>
 
 <script>
+(function(window, document, undefined) {
+
   Polymer({
     is: 'px-code-editor',
 
@@ -223,11 +227,22 @@ Example:
       if (!this.editor) {
         this._initializeEditor();
       }
+      if (this.editor) {
+        // Watch for changes to the editor
+        this.listen(this.editor, 'change', '_handleEditorChange');
+        // FOR SHADOW DOM: Watch for new themes to be loaded, so we can grab
+        // them from the document head and inject into the shadow root
+        this.listen(this.editor.renderer, 'themeLoaded', '_handleThemeLoaded');
+        // Listen for beautify to load
+        this.listen(window, 'beautify-extension-loaded', '_handleBeautifyLoaded');
+      }
     },
 
     detached: function() {
       if (this.editor) {
         this.unlisten(this.editor, 'change', '_handleEditorChange');
+        this.unlisten(this.editor.renderer, 'themeLoaded', '_handleThemeLoaded');
+        this.unlisten(window, 'beautify-extension-loaded', '_handleBeautifyLoaded');
       }
     },
 
@@ -283,8 +298,16 @@ Example:
      */
     _initializeEditor: function() {
       // Create the ace instance then bind to this (don't assign directly to this)
-      var editor = ace.edit('editor');
+      var editorEl = Polymer.dom(this.root).querySelector('#editor');
+      var editor = ace.edit(editorEl);
       this.editor = editor;
+
+      // FOR SHADOW DOM: The ace editor tries to dump a bunch of stuff into the
+      // document head. That works fine in Shady DOM but breaks in Shadow DOM.
+      // We have to go out, grab the things from the head, and shove them into
+      // the shadow root for changes to take effect. Sad! Bad code!
+      this._moveToShadowRoot('#ace_editor\\.css');
+      this._moveToShadowRoot('#ace-tm');
 
       // Assign the default theme
       // this.editor.setTheme('ace/theme/monokai');
@@ -299,9 +322,6 @@ Example:
       if (!(this.enableBeautify && !this._beautify)) {
         this._updateEditorContent(this.content);
       }
-
-      // Attach listeners to the editor
-      this.listen(this.editor, 'change', '_handleEditorChange');
 
       // Set the blockScrolling attribute to stop annoying console messages
       this.editor.$blockScrolling = Infinity;
@@ -357,7 +377,7 @@ Example:
      * Initializes the beautify plugin once it is loaded and parsed. Attempt
      * to beautify whatever content is
      */
-    _initializeBeautify: function() {
+    _handleBeautifyLoaded: function() {
       this._beautifyRetries = this._beautifyRetries || 0;
       // If beautify has been parsed and is in the window, attach to `this`
       // and update the editor content (if any) to ensure it's beautiful
@@ -535,7 +555,7 @@ Example:
           });
         }
       }, 10);
-    }
+    },
     /**
      * Fired when the user changes content in the editor document.
      *
@@ -555,5 +575,42 @@ Example:
      *
      * @event px-code-editor-content-changed
      */
+
+    /**
+     * When a new editor theme is loaded, grab the node that the theme is injected
+     * into in the document head and clone it into this element's shadow root
+     * so styles will take effect in Shadow DOM.
+     *
+     * @param {Event} evt
+     */
+    _handleThemeLoaded: function(evt) {
+      this._moveToShadowRoot('#' + evt.theme.cssClass);
+    },
+
+    /**
+     * Query the entire document for the `selector`. Clone that node and place it
+     * into this element's shadow root so it won't get sandboxed out in
+     * Shadow DOM. Useful for grabbing CSS from the document and injecting it
+     * to style this component.
+     *
+     * @param {String} selector - A valid query that can be passed to `document.querySelector` to find a node to clone
+     */
+    _moveToShadowRoot(selector) {
+      var sourceNode = document.querySelector(selector);
+      if (sourceNode) {
+        Polymer.dom(this.root).appendChild(cloneStyleNode(sourceNode));
+      }
+    }
   });
+
+  // IE Safe
+  // Cheers to https://github.com/Juicy/juicy-ace-editor/blob/master/juicy-ace-editor.html
+  // for the concept behind this function
+  function cloneStyleNode(styleNode) {
+    var newStyleNode = document.createElement('style');
+    newStyleNode.id = styleNode.id;
+    newStyleNode.textContent = styleNode.textContent;
+    return newStyleNode;
+  }
+}(window, document));
 </script>

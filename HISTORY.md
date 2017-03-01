@@ -1,3 +1,8 @@
+v1.1.4
+==================
+* Inject styles loaded by ace library into the shadow root to ensure they take effect in Shadow DOM
+* Load beautify extensions with script tags that check for existence on the window to avoid conflicts/wasted effort. Initialize beautify by listening for an event on the window. This is necessary because they were previously loaded with link tags which do not work inside a Shadow DOM shadow root.
+
 v1.1.3
 ==================
 * Add a `flex-to-size` option for resizing to fit parent
