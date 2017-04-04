@@ -1,3 +1,7 @@
+v1.1.5
+==================
+* Fix JavaScript formatting and IIFE formatting bugs that throw exceptions in IE11
+
 v1.1.4
 ==================
 * Inject styles loaded by ace library into the shadow root to ensure they take effect in Shadow DOM

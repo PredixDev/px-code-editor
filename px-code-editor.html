@@ -86,7 +86,7 @@ Example:
 </dom-module>
 
 <script>
-(function(window, document, undefined) {
+(function() {
 
   Polymer({
     is: 'px-code-editor',
@@ -250,7 +250,7 @@ Example:
      * Handle 'iron-resize' event to ensure the editor size is synced with
      * the available space.
      */
-    _handleResizeEvent(evt) {
+    _handleResizeEvent: function(evt) {
       if (!this.flexToSize) {
         this._fitToParentContainer(20);
       }
@@ -595,7 +595,7 @@ Example:
      *
      * @param {String} selector - A valid query that can be passed to `document.querySelector` to find a node to clone
      */
-    _moveToShadowRoot(selector) {
+    _moveToShadowRoot: function(selector) {
       var sourceNode = document.querySelector(selector);
       if (sourceNode) {
         Polymer.dom(this.root).appendChild(cloneStyleNode(sourceNode));
@@ -612,5 +612,5 @@ Example:
     newStyleNode.textContent = styleNode.textContent;
     return newStyleNode;
   }
-}(window, document));
+})();
 </script>

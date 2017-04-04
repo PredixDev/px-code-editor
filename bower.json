@@ -1,6 +1,6 @@
 {
   "name": "px-code-editor",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Code editor component that provides a lightweight wrapper around Ace Editor",
   "main": [
     "px-code-editor.html"
