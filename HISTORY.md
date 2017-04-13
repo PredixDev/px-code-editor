@@ -1,3 +1,7 @@
+v2.0.0-prerelease
+==================
+* updated dependencies for design refresh
+
 v1.1.5
 ==================
 * Fix JavaScript formatting and IIFE formatting bugs that throw exceptions in IE11
