@@ -6,6 +6,7 @@
     "px-code-editor.html"
   ],
   "ignore": [
+    "*.enc",
     "**/.*",
     "node_modules",
     "bower_components",
