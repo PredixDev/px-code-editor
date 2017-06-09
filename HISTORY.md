@@ -1,3 +1,7 @@
+v1.1.6
+==================
+* Fixed safari sass bug
+
 v1.1.5
 ==================
 * Fix JavaScript formatting and IIFE formatting bugs that throw exceptions in IE11
