@@ -27,13 +27,16 @@
   ],
   "dependencies": {
     "polymer": "^1.9.0",
-    "px-theme": "^3.0.0",
     "js-beautify": "^1.6.8",
     "iron-resizable-behavior": "^2.0.0"
   },
   "devDependencies": {
+    "px-theme": "^3.0.0",
     "px-starter-kit-design": "^1.0.0",
     "px-buttons-design": "^2.0.0",
     "px-demo": "^2.0.0"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^0.7.24"
   }
 }
