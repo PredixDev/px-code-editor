@@ -46,7 +46,7 @@ $inuit-enable-btn--primary : true;
 .code-editor__wrapper {
   position: relative;
 }
-.code-editor__content {
+.code-editor__content#editor {
   margin: 0;
   position: absolute;
   top: 0;
