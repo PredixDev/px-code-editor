@@ -2,7 +2,7 @@
 
 ## Overview
 
-The px-code-editor component provides a rich, full-featured editor that can be embedded as a webcomponents and controlled through a simple attribute and event based API.
+`Px-code-ediot` is a Predix UI component which provides a rich, full-featured editor that can be embedded as a webcomponent and controlled through a simple attribute and event based API.
 
 Use it to provide an embedded code editor to users for editing JavaScript, HTML, CSS or other common languages. The editor is a wrapper around the open-source Ace Editor project.
 
