@@ -1,3 +1,7 @@
+v2.0.1
+==================
+* unique demo name and runtime theming
+
 v2.0.0
 ==================
 * updated dependencies for design refresh
