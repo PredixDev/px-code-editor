@@ -16,7 +16,6 @@ Example:
 ```
 <px-code-editor
     language="javascript"
-    enable-beautify
     content="var array = ['firstItem', 'secondItem'];">
 </px-code-editor>
 ```

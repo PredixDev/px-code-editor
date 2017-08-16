@@ -4,6 +4,7 @@
     'gulp serve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
 -->
 <link rel="import" href="../polymer/polymer.html">
+<link async rel="import" href="beautify-js-import.html">
 <link rel="import" href="css/px-code-editor-styles.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 
@@ -22,7 +23,7 @@ the `content` attribute (or data-binding on it) with the stringified code.
 
 Example:
 
-    <px-code-editor language="javascript" enable-beautify content="var array = ['firstItem', 'secondItem'];"></px-code-editor>
+    <px-code-editor language="javascript" content="var array = ['firstItem', 'secondItem'];"></px-code-editor>
 
 #### Watching for changes
 
@@ -73,15 +74,6 @@ Example:
         </div>
       </template>
     </section>
-
-    <template is="dom-if" if="{{_shouldBeautify('javascript', enableBeautify, language)}}">
-      <!-- <link rel="import" href="js-beautify.html" on-load="_initializeBeautify"> -->
-      <script src="load-js-beautify.js"></script>
-    </template>
-    <template is="dom-if" if="{{_shouldBeautify('html', enableBeautify, language)}}">
-      <!-- <link rel="import" href="html-beautify.html" on-load="_initializeBeautify"> -->
-      <script src="load-html-beautify.js"></script>
-    </template>
   </template>
 </dom-module>
 
@@ -122,18 +114,6 @@ Example:
       content: {
         type: String,
         observer: '_updateEditorContent'
-      },
-
-      /**
-       * Enables the `beautify` plugin.
-       *
-       * @property enableBeautify
-       * @type {Boolean}
-       * @default <false></false>
-       */
-      enableBeautify: {
-        type: Boolean,
-        value: false
       },
 
       /**
@@ -233,8 +213,6 @@ Example:
         // FOR SHADOW DOM: Watch for new themes to be loaded, so we can grab
         // them from the document head and inject into the shadow root
         this.listen(this.editor.renderer, 'themeLoaded', '_handleThemeLoaded');
-        // Listen for beautify to load
-        this.listen(window, 'beautify-extension-loaded', '_handleBeautifyLoaded');
       }
     },
 
@@ -242,7 +220,6 @@ Example:
       if (this.editor) {
         this.unlisten(this.editor, 'change', '_handleEditorChange');
         this.unlisten(this.editor.renderer, 'themeLoaded', '_handleThemeLoaded');
-        this.unlisten(window, 'beautify-extension-loaded', '_handleBeautifyLoaded');
       }
     },
 
@@ -318,11 +295,6 @@ Example:
       this._setLinterStatus(this.disableLinter);
       this._setTabSize(this.tabSize);
 
-      // Attempt to flow in content if it exists, unless we're waiting on beautify
-      if (!(this.enableBeautify && !this._beautify)) {
-        this._updateEditorContent(this.content);
-      }
-
       // Set the blockScrolling attribute to stop annoying console messages
       this.editor.$blockScrolling = Infinity;
 
@@ -374,33 +346,6 @@ Example:
     },
 
     /**
-     * Initializes the beautify plugin once it is loaded and parsed. Attempt
-     * to beautify whatever content is
-     */
-    _handleBeautifyLoaded: function() {
-      this._beautifyRetries = this._beautifyRetries || 0;
-      // If beautify has been parsed and is in the window, attach to `this`
-      // and update the editor content (if any) to ensure it's beautiful
-      var entrypoint;
-      if (this.language === 'javascript') entrypoint = 'js_beautify';
-      if (this.language === 'html') entrypoint = 'html_beautify';
-      if (window[entrypoint]) {
-        this._beautify = window[entrypoint];
-        this._updateEditorContent(this.content);
-        return;
-      }
-      // Otherwise, in 50ms try again. This will loop and retry until it
-      // succeeds or hits the maximum number of retries.
-      else if (this._beautifyRetries < 10) {
-        this._beautifyRetries++;
-        this.async(this._initializeBeautify, 50);
-      }
-      else {
-        console.log('[px-demo-snippet] Failed to load beautify. Hit maximum number of retries. ');
-      }
-    },
-
-    /**
      * Checks if the editor instance has been created, and if the user requested
      * the specific extension, before it is loaded and parsed.
      *
@@ -411,17 +356,6 @@ Example:
     },
 
     /**
-     * If `enableBeautify` is set and the requested `language` matches the
-     * caller, returns `true`.
-     *
-     * @param {String} language - The language `this.language` should match
-     * @return {Boolean}
-     */
-    _shouldBeautify: function(language) {
-      return this.enableBeautify && this.language === language;
-    },
-
-    /**
      * Updates the editor instance's content.
      *
      * @param {String} content
@@ -429,9 +363,7 @@ Example:
     _updateEditorContent: function(content) {
       if (content && (typeof content === 'string') && this.editor) {
         var newContent = content;
-        if (this.enableBeautify) {
-          newContent = this._beautifyContent(content);
-        }
+        newContent = this._beautifyContent(content);
         this.editor.setValue(newContent);
         this.editor.scrollToLine(0);
         this.editor.gotoLine(0);
@@ -445,12 +377,12 @@ Example:
      * @return {String}
      */
     _beautifyContent: function(content) {
-      if (typeof this._beautify !== 'function') return content;
+      if (typeof window.js_beautify !== 'function' || this.language !== 'javascript') return content;
       var beautifyConfig = {
         'indent_size' : this.tabSize || 2,
         'brace_style' : 'end-expand'
       };
-      return this._beautify(content, beautifyConfig);
+      return window.js_beautify(content, beautifyConfig);
     },
 
     /**
