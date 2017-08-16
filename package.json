@@ -2,7 +2,7 @@
     "name": "px-code-editor",
     "author": "General Electric",
     "description": "Code editor component that provides a lightweight wrapper around Ace Editor",
-    "version": "2.0.1",
+    "version": "3.0.0",
     "private": false,
     "extName": null,
     "repository": {

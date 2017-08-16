@@ -1,3 +1,9 @@
+v3.0.0
+==================
+* Removes dynamic loading of beautify
+* Removes HTML beautify, only beautifies JavaScript
+* Removes `enableBeautify` property, beautify is loaded when its needed
+
 v2.0.1
 ==================
 * unique demo name and runtime theming
