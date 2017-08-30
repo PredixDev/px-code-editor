@@ -1,3 +1,7 @@
+v3.0.1
+==================
+* Rebuild to pick up correct button sass.
+
 v3.0.0
 ==================
 * Removes dynamic loading of beautify
