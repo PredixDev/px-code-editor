@@ -1,3 +1,7 @@
+v3.1.0
+==================
+* Polymer 1.x/2.x hybrid support.
+
 v3.0.1
 ==================
 * Rebuild to pick up correct button sass.
