@@ -1,3 +1,7 @@
+v4.0.1
+==================
+* Remove theme from component
+
 v4.0.0
 ==================
 * Adds much more robust support for Polymer 1.x AND 2.x runtimes in shadow DOM
