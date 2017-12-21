@@ -2,42 +2,7 @@
 
 ## Overview
 
-`Px-code-ediot` is a Predix UI component which provides a rich, full-featured editor that can be embedded as a webcomponent and controlled through a simple attribute and event based API.
-
-Use it to provide an embedded code editor to users for editing JavaScript, HTML, CSS or other common languages. The editor is a wrapper around the open-source Ace Editor project.
-
-#### Usage
-
-Pass code in to the editor by configuring how you want it to appear then setting
-the `content` attribute (or data-binding on it) with the stringified code.
-
-Example:
-
-```
-<px-code-editor
-    language="javascript"
-    content="var array = ['firstItem', 'secondItem'];">
-</px-code-editor>
-```
-
-#### Watching for changes
-
-The editor document will be populated by the `content` attribute, but changes to the document will not be data-bound out on the `content` attribute by default.
-
-To listen for and handle changes to the editor content, add a listener to the `px-code-editor` instance (see documentation for the `px-code-editor-content-changed` in the component demo's API section).
-
-Example:
-
-```
-<px-code-editor ...></px-code-editor>
-<script type="text/javascript">
-  var codeEditor = document.querySelector('px-code-editor');
-  codeEditor.addEventListener('px-code-editor-content-changed', function(evt) {
-    var newEditorContent = evt.detail.content;
-    // ... handle the change here ...
-  });
-</script>
-```
+`px-code-editor` is a web component that provides a rich code editor. `px-code-editor` wraps around the open source CodeMirror editor and exposes a simple attribute and event based API for configuration and use.
 
 ## Usage
 
@@ -68,8 +33,7 @@ Finally, use the component in your application:
 ```
 <px-code-editor
     language="javascript"
-    enable-beautify
-    content="var array = ['firstItem', 'secondItem'];">
+    value="var array = ['firstItem', 'secondItem'];">
 </px-code-editor>
 ```
 

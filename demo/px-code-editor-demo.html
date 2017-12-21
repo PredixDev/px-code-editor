@@ -14,7 +14,6 @@
 
 <!-- Imports for this component -->
 <link rel="import" href="../px-code-editor.html" />
-<link rel="import" href="../px-code-editor-converter.html" />
 
 <!-- Demo DOM module -->
 <dom-module id="px-code-editor-demo">
@@ -24,35 +23,30 @@
     <!-- Header -->
     <px-demo-header
         module-name="px-code-editor"
-        description="The px-code-editor component provides a rich, full-featured editor that can be embedded as a webcomponents and controlled through a simple attribute and event based API. Use it to provide an embedded code editor to users for editing JavaScript, HTML, CSS or other common languages. The editor is a wrapper around the open-source Ace Editor project.">
+        description="px-code-editor is a web component that provides a rich code editor. px-code-editor wraps around the open source CodeMirror editor and exposes a simple attribute and event based API for configuration and use.">
     </px-demo-header>
 
     <!-- Interactive -->
     <px-demo-interactive>
       <!-- Configs -->
-      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+      <px-demo-configs slot="px-demo-configs" configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
 
       <!-- Props -->
-      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+      <px-demo-props slot="px-demo-props" props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component class="flex__item flex flex--col">
-        <div class="flex__item flex">
+      <px-demo-component slot="px-demo-component" class="flex__item flex flex--col">
+        <!-- <div class="flex__item flex"> -->
           <px-code-editor
-              content="{{props.content.value}}"
-              language="{{props.language.value}}"
-              disable-linter="{{props.disableLinter.value}}"
-              enable-save-to-update="{{props.enableSaveToUpdate.value}}"
-              reset-button-label="{{props.resetButtonLabel.value}}"
-              save-button-label="{{props.saveButtonLabel.value}}"
-              tab-size="{{props.tabSize.value}}"
-              flex-to-size="{{props.flexToSize.value}}">
+              value="{{props.value.value}}"
+              mode="{{props.mode.value}}">
           </px-code-editor>
-        </div>
+        <!-- </div> -->
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
 
       <px-demo-component-snippet
+          slot="px-demo-component-snippet"
           element-properties="{{props}}"
           element-name="px-code-editor">
       </px-demo-component-snippet>
@@ -71,76 +65,29 @@
     is: 'px-code-editor-demo',
 
     properties: {
-
       props: {
         type: Object,
-        value: function(){ return this.demoProps; }
+        value: () => ({
+          value: {
+            type: String,
+            defaultValue: 'function convertJSONToString(source) { try { return JSON.stringify(source); } catch (err) { return new Error("Unable to convert JSON: " + err.toString()); } }',
+            inputType: 'text'
+          },
+          mode: {
+            type: String,
+            defaultValue: 'javascript',
+            inputChoices: ['javascript','text/html'],
+            inputType: 'dropdown'
+          }
+        })
       },
 
       configs: {
         type: Array,
-        value: function(){
-          return [
-            { configName: "Default",
-              configReset: true },
-            { configName: "Save to update",
-              configReset: true,
-              enableSaveToUpdate: true,
-              saveButtonLabel: "Save and Continue",
-              resetButtonLabel: "Cancel and Start Over" }
-          ]
-        }
-      }
-    },
-
-    demoProps: {
-      content: {
-        type: String,
-        defaultValue: 'function convertJSONToString(source) { try { return JSON.stringify(source); } catch (err) { return new Error("Unable to convert JSON: " + err.toString()); } }',
-        inputType: 'text'
-      },
-
-      language: {
-        type: String,
-        defaultValue: 'javascript',
-        inputChoices: ['javascript','html'],
-        inputType: 'dropdown'
-      },
-
-      disableLinter: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-
-      enableSaveToUpdate: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-
-      resetButtonLabel: {
-        type: String,
-        defaultValue: 'Discard Changes',
-        inputType: 'text'
-      },
-
-      saveButtonLabel: {
-        type: String,
-        defaultValue: 'Save Changes',
-        inputType: 'text'
-      },
-
-      tabSize: {
-        type: String,
-        defaultValue: '2',
-        inputType: 'text'
-      },
-
-      flexToSize: {
-        type: Boolean,
-        defaultValue: true,
-        inputType: 'toggle'
+        value: () => ([
+          { configName: "Default",
+            configReset: true }
+        ])
       }
     }
   });

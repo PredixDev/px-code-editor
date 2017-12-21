@@ -1,3 +1,18 @@
+v4.0.0
+==================
+* Adds much more robust support for Polymer 1.x AND 2.x runtimes in shadow DOM
+  and shady DOM mode
+* Removes ace editor and switches to CodeMirror as editor base. The ace editor
+  loading and styling system made it hard to compartmentalize all behaviors
+  so they run correctly in the shadow DOM.
+* Deprecates `px-code-editor-converter` component, apps should implement their
+  own code to convert strings to JavaScript or JSON or vice-versa
+* Removes beautify code, apps should load a beautifier library on their own
+  and format code before passing it into the px-code-editor `value` property.
+* Strips down the `px-code-editor` API to only allow setting/getting value
+  and setting the mode (aka language). See the API docs page for guidance
+  on which APIs are now available.
+
 v3.1.0
 ==================
 * Polymer 1.x/2.x hybrid support.

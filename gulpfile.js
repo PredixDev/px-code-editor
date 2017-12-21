@@ -11,6 +11,7 @@ const gulpif = require('gulp-if');
 const combiner = require('stream-combiner2');
 const bump = require('gulp-bump');
 const argv = require('yargs').argv;
+const exec = require('child_process').exec;
 
 const sassOptions = {
   importer: importOnce,
@@ -55,6 +56,14 @@ gulp.task('sass', function() {
     .pipe(browserSync.stream({match: 'css/*.html'}));
 });
 
+gulp.task('generate-api', function (cb) {
+  exec(`node_modules/.bin/polymer analyze ${pkg.name}.html > ${pkg.name}-api.json`, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+});
+
 gulp.task('watch', function() {
   gulp.watch(['sass/*.scss'], ['sass']);
 });
@@ -92,37 +101,5 @@ gulp.task('bump:major', function(){
 });
 
 gulp.task('default', function(callback) {
-  gulpSequence('clean', 'sass')(callback);
+  gulpSequence('clean', 'sass', 'generate-api')(callback);
 });
-
-/**
- * Custom for this component: Build the ace theme from ace-theme/*.
- */
-
-const replace = require('gulp-replace');
-const fs = require('fs');
-
-gulp.task('editor', function(callback) {
-  gulpSequence('editor:sass', 'editor:js', 'editor:clean')(callback);
-});
-
-gulp.task('editor:sass', function() {
-  return gulp.src(['./ace-theme/*.scss'])
-    .pipe(buildCSS())
-    .pipe(gulp.dest('ace-theme'))
-});
-
-gulp.task('editor:js', function(){
-  gulp.src(['./ace-theme/theme-predix.js'])
-    .pipe(replace(/\/\*GULP_WILL_ADD_INLINE_CSS_HERE\*\//g, '"' + readThemeCSS() + '"'))
-    .pipe(gulp.dest('ace'));
-});
-
-gulp.task('editor:clean', function(){
-  gulp.src(['./ace-theme/*.css'])
-    .pipe($.clean());
-});
-
-function readThemeCSS() {
-  return fs.readFileSync('ace-theme/theme-predix.css', 'utf8');
-}
