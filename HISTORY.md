@@ -1,3 +1,7 @@
+v4.0.2
+==================
+* fixing demo pages for IE11
+
 v4.0.1
 ==================
 * Remove theme from component
