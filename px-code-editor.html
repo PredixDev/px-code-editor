@@ -72,6 +72,9 @@
         });
         this._setEditor(editor);
         editor.on('changes', this._onEditorChanges.bind(this));
+        setTimeout(function() {
+          this.editor.execCommand('goDocEnd');
+        }.bind(this));
       }
     },
     _onEditorChanges(e) {
