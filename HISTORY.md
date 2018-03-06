@@ -1,3 +1,7 @@
+v4.0.3
+==================
+* Call refresh on CodeMirror instance after initial render, fixes #1
+
 v4.0.2
 ==================
 * fixing demo pages for IE11
