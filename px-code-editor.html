@@ -72,6 +72,12 @@
         });
         this._setEditor(editor);
         editor.on('changes', this._onEditorChanges.bind(this));
+
+        // `refresh()` the CodeMirror instance after initial render to ensure
+        // the text is visible. See issue #1.
+        Polymer.RenderStatus.afterNextRender(this, () => {
+          this.editor.refresh();
+        });
       }
     },
     _onEditorChanges(e) {
