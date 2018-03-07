@@ -1,6 +1,6 @@
 {
   "name": "px-code-editor",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "Code editor component that runs in the browser",
   "main": [
     "px-code-editor.html"

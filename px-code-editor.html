@@ -48,6 +48,7 @@
         }
         if (this.editor.getValue() !== value) {
           this.editor.setValue(value);
+          this._refresh();
         }
       }
     },
@@ -72,13 +73,15 @@
         });
         this._setEditor(editor);
         editor.on('changes', this._onEditorChanges.bind(this));
-
-        // `refresh()` the CodeMirror instance after initial render to ensure
-        // the text is visible. See issue #1.
-        Polymer.RenderStatus.afterNextRender(this, () => {
-          this.editor.refresh();
-        });
+        this._refresh();
       }
+    },
+    _refresh() {
+      // `refresh()` the CodeMirror instance after initial render to ensure
+      // the text is visible. See issues #1 and #3.
+      Polymer.RenderStatus.afterNextRender(this, () => {
+        this.editor.refresh();
+      });
     },
     _onEditorChanges(e) {
       this.debounce('handle-editor-changes', () => {

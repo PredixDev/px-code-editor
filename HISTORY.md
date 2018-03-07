@@ -1,3 +1,7 @@
+v4.0.4
+==================
+* Call refresh on CodeMirror instance after updates, fixes #3
+
 v4.0.3
 ==================
 * Call refresh on CodeMirror instance after initial render, fixes #1
